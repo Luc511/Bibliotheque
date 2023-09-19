@@ -15,6 +15,13 @@ public class Book {
         available = true;
     }
 
+    public void borrowBook(User user, Book book) {
+
+    }
+    public void returnBook(User user, Book book) {
+
+    }
+
     public String getTitle() {
         return title;
     }
