@@ -1,9 +1,9 @@
 import java.util.Objects;
 
 public class Book {
-    private final String title;
-    private final String author;
-    private final int yearOfPublication;
+    private String title;
+    private String author;
+    private int yearOfPublication;
     private final String ISBN;
     private boolean available;
 
@@ -15,11 +15,16 @@ public class Book {
         available = true;
     }
 
-    public void borrowBook(User user, Book book) {
-
+    public void setTitle(String title) {
+        this.title = title;
     }
-    public void returnBook(User user, Book book) {
 
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public void setYearOfPublication(int yearOfPublication) {
+        this.yearOfPublication = yearOfPublication;
     }
 
     public String getTitle() {
@@ -46,9 +51,19 @@ public class Book {
         this.available = available;
     }
 
+    public void displayAll() {
+        System.out.printf("""
+                Titre: %s
+                Auteur: %s
+                Année de publication: %d
+                ISBN: %s
+                Disponible: %b
+                %n""", title, author, yearOfPublication, ISBN, available);
+    }
+
     @Override
     public String toString() {
-        return title + " de " + author;
+        return ISBN + " / " + title + " de " + author;
     }
 
     @Override
