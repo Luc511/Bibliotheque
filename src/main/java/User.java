@@ -1,16 +1,27 @@
+import lombok.Builder;
+
+import java.time.LocalDate;
+
+@Builder
 public class User {
+    private final int userId;
     private final String firstName;
     private final String lastName;
     private String login;
     private String password;
     private final Role role;
+    private final LocalDate birthdate;
+    private final int addressId;
 
-    public User(String firstName, String lastName, String login, String password, Role role) {
+    public User(int userId, String firstName, String lastName, String login, String password, Role role, LocalDate birthdate, int addressId) {
+        this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.login = login;
         this.password = password;
         this.role = role;
+        this.birthdate = birthdate;
+        this.addressId = addressId;
     }
 
     public String getFirstName() {

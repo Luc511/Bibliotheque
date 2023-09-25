@@ -1,14 +1,20 @@
+import lombok.Builder;
+
 import java.util.Objects;
 
+@Builder
 public class Book {
+    private final int bookId;
     private String title;
-    private String author;
+    private final Author author;
     private int yearOfPublication;
     private final String ISBN;
     private boolean available;
+    // TODO: 25/09/2023 gérer libraryId ?
 
-    public Book(String title, String author, int yearOfPublication, String ISBN) {
+    public Book(String title, Author author, int bookId, int yearOfPublication, String ISBN) {
         this.title = title;
+        this.bookId = bookId;
         this.author = author;
         this.yearOfPublication = yearOfPublication;
         this.ISBN = ISBN;
@@ -19,20 +25,12 @@ public class Book {
         this.title = title;
     }
 
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
     public void setYearOfPublication(int yearOfPublication) {
         this.yearOfPublication = yearOfPublication;
     }
 
     public String getTitle() {
         return title;
-    }
-
-    public String getAuthor() {
-        return author;
     }
 
     public int getYearOfPublication() {

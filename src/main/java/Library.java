@@ -90,26 +90,6 @@ public class Library {
         }
     }
 
-    public final static void clearConsole()
-    {
-        try
-        {
-            final String os = System.getProperty("os.name");
-
-            if (os.contains("Windows"))
-            {
-                Runtime.getRuntime().exec("cls");
-            }
-            else
-            {
-                Runtime.getRuntime().exec("clear");
-            }
-        }
-        catch (final Exception e) {
-            System.out.println(e);
-        }
-    }
-
     public Book findByISBN(String ISBN) {
         return bookList.stream()
                 .filter(book -> ISBN.equals(book.getISBN()))
@@ -135,17 +115,21 @@ public class Library {
            System.out.println("ISBN: ");
            String ISBN = sc.nextLine();
 
-           return new Book(title,author,year,ISBN);
+           return new Book(title,author, bookId, year,ISBN);
 
        }else {
            throw new IllegalArgumentException("Mauvais format");
        }
     }
 
+    public void init() {
+
+    }
+
     public boolean start() {
 
-        userList.add(new User("Lucas", "Balon", "lucas", "balon", Role.ADMIN));
-        bookList.add(new Book("titre du livre", "auteur du livre", 1999, "ISBNISBN"));
+        userList.add(new User(99, "Lucas", "Balon", "lucas", "balon", Role.ADMIN, LocalDate.now(), 99));
+        bookList.add(new Book("titre du livre", new Author(999, "aller"), bookId, 1999, "ISBNISBN"));
 
         String connect = """
                 *********************
