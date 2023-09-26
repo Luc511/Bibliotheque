@@ -7,7 +7,7 @@ drop table if exists Address;
 
 
 create table Address (
-    addressId int primary key,
+    addressId bigserial primary key,
     streetNumber varchar(50) not null,
     streetName varchar(50) not null,
     zipCode varchar(50) not null,
@@ -15,7 +15,7 @@ create table Address (
 );
 
 create table User_ (
-    userId bigint primary key,
+    userId bigserial primary key,
     firstName varchar(50) not null,
     lastName varchar(50) not null,
     birthdate date,
@@ -28,12 +28,12 @@ create table User_ (
 );
 
 create table Author (
-    authorId bigint primary key,
+    authorId bigserial primary key,
     name varchar(50) not null
 );
 
 create table Library (
-    libraryId int primary key,
+    libraryId bigserial primary key,
     name varchar(50) not null,
     addressId int
         constraint FK_address_library
@@ -41,7 +41,7 @@ create table Library (
 );
 
 create table Book (
-    bookId bigint primary key,
+    bookId bigserial primary key,
     name varchar(50) not null ,
     publishingYear int,
     isbn varchar(50) not null ,
@@ -55,7 +55,7 @@ create table Book (
 );
 
 create table Borrow (
-    borrowId bigint primary key,
+    borrowId bigserial primary key,
     borrowDate date not null,
     returnDate date,
     userId int
