@@ -6,39 +6,39 @@ import java.util.Objects;
 public class Book {
     private final int bookId;
     private String title;
-    private Author author;
+    private int authorId;
     private int yearOfPublication;
     private final String ISBN;
     private boolean available;
 
 
-    public Book(int bookId, String title, Author author, int yearOfPublication, String ISBN) {
+    public Book(int bookId, String title, int authorId, int yearOfPublication, String ISBN) {
         this.bookId = bookId;
         this.title = title;
-        this.author = author;
+        this.authorId = authorId;
         this.yearOfPublication = yearOfPublication;
         this.ISBN = ISBN;
         this.available = true;
     }
-    public Book(int bookId, String title, Author author, int yearOfPublication, String ISBN, boolean available) {
+    public Book(int bookId, String title, int authorId, int yearOfPublication, String ISBN, boolean available) {
         this.bookId = bookId;
         this.title = title;
-        this.author = author;
+        this.authorId = authorId;
         this.yearOfPublication = yearOfPublication;
         this.ISBN = ISBN;
         this.available = available;
     }
 
-    public void setAuthor(Author author) {
-        this.author = author;
+    public void setAuthor(int author) {
+        this.authorId = author;
     }
 
     public int getBookId() {
         return bookId;
     }
 
-    public Author getAuthor() {
-        return author;
+    public int getAuthor() {
+        return authorId;
     }
 
     public void setTitle(String title) {
@@ -76,12 +76,12 @@ public class Book {
                 Année de publication: %d
                 ISBN: %s
                 Disponible: %b
-                %n""", title, author, yearOfPublication, ISBN, available);
+                %n""", title, Library.getAuthorNameById(authorId), yearOfPublication, ISBN, available);
     }
 
     @Override
     public String toString() {
-        return ISBN + " / " + title + " de " + author.getName();
+        return ISBN + " / " + title + " de " + Library.getAuthorNameById(authorId);
     }
 
     @Override
