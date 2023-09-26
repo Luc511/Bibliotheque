@@ -6,6 +6,9 @@ out/
 .xml
 /.idea/
 
+### Maven ###
+/target/.class
+
 ### Eclipse ###
 .apt_generated
 .classpath
