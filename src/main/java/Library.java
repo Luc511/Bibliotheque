@@ -1,37 +1,15 @@
+import lombok.Data;
+
 import java.time.LocalDate;
 import java.util.*;
 
+@Data
 public class Library {
-    private List<Book> bookList = new ArrayList<>();
-    private List<User> userList = new ArrayList<>();
-    private List<Borrow> borrowsHistoric = new ArrayList<>();
+    private ArrayList<Book> bookList = new ArrayList<>();
+    private ArrayList<User> userList = new ArrayList<>();
+    private ArrayList<Borrow> borrowsHistoric = new ArrayList<>();
+    private ArrayList<Author> authorList = new ArrayList<>();
     private Scanner sc = new Scanner(System.in);
-
-
-
-    public List<Borrow> getBorrowsHistoric() {
-        return borrowsHistoric;
-    }
-
-    public void setBorrowsHistoric(List<Borrow> borrowsHistoric) {
-        this.borrowsHistoric = borrowsHistoric;
-    }
-
-    public List<Book> getBookList() {
-        return bookList;
-    }
-
-    public void setBookList(List<Book> bookList) {
-        this.bookList = bookList;
-    }
-
-    public List<User> getUserList() {
-        return userList;
-    }
-
-    public void setUserList(List<User> userList) {
-        this.userList = userList;
-    }
 
     public void addBook(Book book, User user) {
         verifyRole(user, Role.ADMIN);
@@ -67,7 +45,7 @@ public class Library {
     }
     public void borrowBook(Book book, User user) {
         if (book.isAvailable()) {
-            borrowsHistoric.add(new Borrow(book, user));
+            borrowsHistoric.add(new Borrow(99, book, user)); // TODO: 26/09/2023 gérer les id avec la DB ?
             book.setAvailable(false);
         } else {
             throw new NoSuchElementException("Livre inexistant ou non disponible");
@@ -115,7 +93,7 @@ public class Library {
            System.out.println("ISBN: ");
            String ISBN = sc.nextLine();
 
-           return new Book(title,author, bookId, year,ISBN);
+           return new Book(99,title,Author.builder().idAuthor(99).name(author).build(), year,ISBN); // TODO: 26/09/2023 créer idBook avec DB ? + pour author
 
        }else {
            throw new IllegalArgumentException("Mauvais format");
@@ -123,13 +101,14 @@ public class Library {
     }
 
     public void init() {
-
+        Requetes.initAuthors(authorList);
+        Requetes.initUsers(userList);
+        Requetes.initBooks(bookList,authorList);
+        Requetes.initBorrow(borrowsHistoric, bookList, userList);
     }
 
     public boolean start() {
-
-        userList.add(new User(99, "Lucas", "Balon", "lucas", "balon", Role.ADMIN, LocalDate.now(), 99));
-        bookList.add(new Book("titre du livre", new Author(999, "aller"), bookId, 1999, "ISBNISBN"));
+        init();
 
         String connect = """
                 *********************

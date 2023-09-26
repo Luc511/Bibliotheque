@@ -31,7 +31,7 @@ public class Requetes {
             throw new RuntimeException(e);
         }
     }
-    public static void initBooks(ArrayList<Book> books) {
+    public static void initBooks(ArrayList<Book> books, ArrayList<Author> authors) {
         String sql = "select * from book";
         try (
                 Connection connection = ConnectionFactory.createConnection();
@@ -45,7 +45,14 @@ public class Requetes {
                                 .title(rs.getString(2))
                                 .yearOfPublication(rs.getInt(3))
                                 .ISBN(rs.getString(4))
-                                .author(rs.getInt(5)) //rechercher author dans la liste qu'on ajoutera en paramètre
+                                .available(rs.getBoolean(5))
+                                .author(authors.stream().filter(author -> {
+                                    try {
+                                        return author.getIdAuthor() == rs.getInt(6);
+                                    } catch (SQLException e) {
+                                        throw new RuntimeException(e);
+                                    }
+                                }).findFirst().orElseThrow(() -> new IllegalArgumentException("Author not found")))
                                 .build()
                 );
             }
@@ -54,12 +61,71 @@ public class Requetes {
             throw new RuntimeException(e);
         }
     }
-    public static void initBorrow(ArrayList<Borrow> borrows) {
+    public static void initBorrow(ArrayList<Borrow> borrows, ArrayList<Book> books, ArrayList<User> users) {
+        String sql = "select * from borrow";
+        try (
+                Connection connection = ConnectionFactory.createConnection();
+                Statement statement = connection.createStatement();
+                ResultSet rs = statement.executeQuery(sql)
+        ){
+            while (rs.next()) {
+                var borrowBuilder = Borrow.builder()
+                        .borrowId(rs.getInt(1))
+                        .user(users.stream()
+                                .filter(user -> {
+                                    try {
+                                        return user.getUserId() == rs.getInt(4);
+                                    } catch (SQLException e) {
+                                        throw new RuntimeException(e);
+                                    }
+                                })
+                                .findFirst()
+                                .orElseThrow(() -> new RuntimeException("User not found")))
+                        .book(books.stream()
+                                .filter(book -> {
+                                    try {
+                                        return book.getBookId() == rs.getInt(5);
+                                    } catch (SQLException e) {
+                                        throw new RuntimeException(e);
+                                    }
+                                })
+                                .findFirst()
+                                .orElseThrow(() -> new RuntimeException("Book not found")));
 
+                var startDate = rs.getDate(2);
+                if (startDate != null) {
+                    borrowBuilder.startDate(startDate.toLocalDate());
+                }
+
+                var endDate = rs.getDate(3);
+                if (endDate != null) {
+                    borrowBuilder.endDate(endDate.toLocalDate());
+                }
+
+                borrows.add(borrowBuilder.build());
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    // TODO: 25/09/2023 Appeler cette fonction avant initBooks
     public static void initAuthors(ArrayList<Author> authors) {
+        String sql = "select * from author";
+        try (
+                Connection connection = ConnectionFactory.createConnection();
+                Statement statement = connection.createStatement();
+                ResultSet rs = statement.executeQuery(sql)
+        ){
+            while (rs.next()) {
+                authors.add(Author.builder()
+                        .idAuthor(rs.getInt(1))
+                        .name(rs.getString(2))
+                        .build());
+            }
 
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

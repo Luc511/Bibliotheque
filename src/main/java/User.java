@@ -24,6 +24,18 @@ public class User {
         this.addressId = addressId;
     }
 
+    public int getUserId() {
+        return userId;
+    }
+
+    public LocalDate getBirthdate() {
+        return birthdate;
+    }
+
+    public int getAddressId() {
+        return addressId;
+    }
+
     public String getFirstName() {
         return firstName;
     }

@@ -6,19 +6,39 @@ import java.util.Objects;
 public class Book {
     private final int bookId;
     private String title;
-    private final Author author;
+    private Author author;
     private int yearOfPublication;
     private final String ISBN;
     private boolean available;
-    // TODO: 25/09/2023 gérer libraryId ?
 
-    public Book(String title, Author author, int bookId, int yearOfPublication, String ISBN) {
-        this.title = title;
+
+    public Book(int bookId, String title, Author author, int yearOfPublication, String ISBN) {
         this.bookId = bookId;
+        this.title = title;
         this.author = author;
         this.yearOfPublication = yearOfPublication;
         this.ISBN = ISBN;
-        available = true;
+        this.available = true;
+    }
+    public Book(int bookId, String title, Author author, int yearOfPublication, String ISBN, boolean available) {
+        this.bookId = bookId;
+        this.title = title;
+        this.author = author;
+        this.yearOfPublication = yearOfPublication;
+        this.ISBN = ISBN;
+        this.available = available;
+    }
+
+    public void setAuthor(Author author) {
+        this.author = author;
+    }
+
+    public int getBookId() {
+        return bookId;
+    }
+
+    public Author getAuthor() {
+        return author;
     }
 
     public void setTitle(String title) {
@@ -61,7 +81,7 @@ public class Book {
 
     @Override
     public String toString() {
-        return ISBN + " / " + title + " de " + author;
+        return ISBN + " / " + title + " de " + author.getName();
     }
 
     @Override

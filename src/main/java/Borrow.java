@@ -1,15 +1,27 @@
-import java.time.LocalDate;
+import lombok.Builder;
 
+import java.time.LocalDate;
+@Builder
 public class Borrow {
+    private final int borrowId;
     private final Book book;
     private final User user;
     private final LocalDate startDate;
     private LocalDate endDate;
 
-    public Borrow(Book book, User user) {
+    public Borrow(int borrowId, Book book, User user) {
+        this.borrowId = borrowId;
         this.book = book;
         this.user = user;
         startDate = LocalDate.now();
+    }
+
+    public Borrow(int borrowId, Book book, User user, LocalDate startDate, LocalDate endDate) {
+        this.borrowId = borrowId;
+        this.book = book;
+        this.user = user;
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
 
     public Book getBook() {

@@ -40,10 +40,10 @@ insert into library values (1, 'Global Library', 1);
 -- Insérer les utilisateurs
 insert into user_ (userId, firstName, lastName, birthdate, login, password, userRole, addressId)
 values
-    (1, 'John', 'Doe', '1980-01-01', 'jdoe', '1234', 'Reader', 1),
-    (2, 'Jane', 'Smith', '1990-01-01', 'jsmith', '1234', 'Reader', 2),
-    (3, 'Robert', 'Jones', '2000-01-01', 'rjones', '1234', 'Reader', 3),
-    (4, 'Julia', 'Johnson', '1970-01-01', 'jjohnson', '1234', 'Librarian', 4);
+    (1, 'John', 'Doe', '1980-01-01', 'jdoe', '1234', 'Admin', 1),
+    (2, 'Jane', 'Smith', '1990-01-01', 'jsmith', '1234', 'user', 2),
+    (3, 'Robert', 'Jones', '2000-01-01', 'rjones', '1234', 'user', 3),
+    (4, 'Julia', 'Johnson', '1970-01-01', 'jjohnson', '1234', 'user', 4);
 
 -- Insérer des livres avec leurs auteurs
 insert into book (bookid, name, publishingyear, isbn, authorid, libraryid, available)
