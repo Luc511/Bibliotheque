@@ -2,6 +2,11 @@ import java.util.*;
 public class Library {
     private final Scanner sc = new Scanner(System.in);
 
+    /**
+     * Encodes a book by inputting its title, author, year of publication, and ISBN.
+     *
+     * @return the encoded book
+     */
     public Book encodeBook() {
         System.out.println("Titre: ");
         String title = sc.nextLine();
@@ -20,6 +25,13 @@ public class Library {
                 .available(true)
                 .build();
     }
+
+    /**
+     * Starts the library system and allows users to perform various actions based on their role.
+     * An admin user has access to additional features compared to a regular user.
+     *
+     * @return {@code true} if the system was started successfully, {@code false} otherwise
+     */
     public boolean start() {
 
         String connect = """

@@ -17,7 +17,10 @@ public class Book {
     private final String ISBN;
     private boolean available;
 
-
+    /**
+     * Display all information about a book, including title, author, year of publication,
+     * ISBN, and availability.
+     */
     public void displayAll() {
         System.out.printf("""
                 Titre: %s

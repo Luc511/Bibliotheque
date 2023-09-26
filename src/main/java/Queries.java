@@ -152,6 +152,18 @@ public class Queries {
             throw new RuntimeException("Mauvais auteur", e);
         }
     }
+
+    /**
+     * This method retrieves the ID of an author using their name.
+     *
+     * It first checks if the author already exists in the database. If so, it retrieves
+     * and returns its ID. If the author does not exist, it creates them and recursively calls this method
+     * to get and return the newly created ID.
+     *
+     * @param name The name of the author for whom to get the ID.
+     * @return The ID of the author from the database.
+     * @throws RuntimeException If an SQL error occurs while executing the query or creating the author.
+     */
     public static int getAuthorIdByName(String name) {
         String sql = "select authorid from author where name = ?";
         try (
