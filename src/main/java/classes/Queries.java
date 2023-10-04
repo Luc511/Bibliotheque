@@ -1,3 +1,10 @@
+package classes;
+
+import classes.Book;
+import classes.ConnectionFactory;
+import classes.Role;
+import classes.User;
+
 import java.sql.*;
 import java.time.LocalDate;
 
@@ -209,8 +216,9 @@ public class Queries {
             throw new RuntimeException("Livre non ajouté", e);
         }
     }
-    public static User connect(String login, String password) {
+    public static User connect(String login, String password) throws SQLException {
         String sql = "select userid, firstname, lastname, birthdate, login, password, userrole, addressid from user_ where login = ? and password = ?";
+        DriverManager.registerDriver(new org.postgresql.Driver());
         try (
                 Connection connection = ConnectionFactory.createConnection();
                 PreparedStatement statement = connection.prepareStatement(sql);

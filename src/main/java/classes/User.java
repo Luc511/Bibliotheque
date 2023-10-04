@@ -1,3 +1,5 @@
+package classes;
+
 import lombok.Builder;
 import lombok.Getter;
 
@@ -7,6 +9,7 @@ import java.time.LocalDate;
 public class User {
     @Getter
     private final int userId;
+    @Getter
     private final String firstName;
     private final String lastName;
     private String login;

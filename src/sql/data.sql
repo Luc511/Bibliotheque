@@ -35,7 +35,7 @@ values
     (10,'Sidney Sheldon');
 
 -- Insérer la librairie
-insert into library values (1, 'Global Library', 1);
+insert into library values (1, 'Global classes.Library', 1);
 
 -- Insérer les utilisateurs
 insert into user_ (userId, firstName, lastName, birthdate, login, password, userRole, addressId)

@@ -1,5 +1,16 @@
+package classes;
+
 import java.util.*;
 public class Library {
+
+    //Singleton
+    private static Library instance;
+    public static Library getInstance() {
+        if (instance == null) {
+            instance = new Library();
+        }
+        return instance;
+    }
     private final Scanner sc = new Scanner(System.in);
 
     /**

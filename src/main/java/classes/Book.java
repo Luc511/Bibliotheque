@@ -1,3 +1,5 @@
+package classes;
+
 import lombok.Builder;
 import lombok.Getter;
 

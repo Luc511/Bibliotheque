@@ -1,8 +1,10 @@
+package classes;
+
 import lombok.Builder;
 import lombok.Data;
 
 /**
- * The Author class represents an author of a book.
+ * The classes.Author class represents an author of a book.
  *
  * This class provides a way to store and retrieve information about an author,
  * such as their ID and name.
