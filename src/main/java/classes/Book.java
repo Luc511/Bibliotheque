@@ -3,19 +3,16 @@ package classes;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.sql.SQLException;
 import java.util.Objects;
 
 @Builder
+@Getter
 public class Book {
-    @Getter
     private final int bookId;
-    @Getter
     private String title;
-    @Getter
     private int authorId;
-    @Getter
     private int yearOfPublication;
-    @Getter
     private final String ISBN;
     private boolean available;
 
@@ -23,7 +20,7 @@ public class Book {
      * Display all information about a book, including title, author, year of publication,
      * ISBN, and availability.
      */
-    public void displayAll() {
+    public void displayAll() throws SQLException {
         System.out.printf("""
                 Titre: %s
                 Auteur: %s
@@ -35,7 +32,11 @@ public class Book {
 
     @Override
     public String toString() {
-        return ISBN + " / " + title + " de " + Queries.getAuthorNameById(authorId);
+        try {
+            return ISBN + " / " + title + " de " + Queries.getAuthorNameById(authorId);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

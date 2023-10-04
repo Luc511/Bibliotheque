@@ -18,6 +18,7 @@ public class LoginServlet extends HttpServlet {
             String password = req.getParameter("inputPassword");
             User user = Queries.connect(login,password);
             req.setAttribute("user", user);
+            req.getSession().setAttribute("loggedUser", user);
             req.getRequestDispatcher("/dashboard.jsp").forward(req,resp);
         }catch (Exception e) {
             resp.setStatus(404);

@@ -1,5 +1,6 @@
 package classes;
 
+import java.sql.SQLException;
 import java.util.*;
 public class Library {
 
@@ -18,7 +19,7 @@ public class Library {
      *
      * @return the encoded book
      */
-    public Book encodeBook() {
+    public Book encodeBook() throws SQLException {
         System.out.println("Titre: ");
         String title = sc.nextLine();
         System.out.println("Auteur: ");

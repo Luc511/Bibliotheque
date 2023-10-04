@@ -1,17 +1,14 @@
 package classes;
 
-import classes.Book;
-import classes.ConnectionFactory;
-import classes.Role;
-import classes.User;
-
 import java.sql.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 public class Queries {
-    public static void addBook(Book book, User user) {
+    public static boolean addBook(Book book, User user) throws SQLException {
         verifyRole(user, Role.ADMIN);
         String sql = "insert into book (name, publishingyear, isbn, available, authorid, libraryid) values (?,?,?,true,?,1)";
+        DriverManager.registerDriver(new org.postgresql.Driver());
         try (
                 Connection connection = ConnectionFactory.createConnection();
                 PreparedStatement statement = connection.prepareStatement(sql);
@@ -21,26 +18,30 @@ public class Queries {
             statement.setString(3, book.getISBN());
             statement.setInt(4,book.getAuthorId());
             statement.executeUpdate();
+            return true;
         } catch (SQLException e) {
             throw new RuntimeException("Livre non ajouté", e);
         }
     }
-    public static void deleteBook(Book book, User user) {
+    public static boolean deleteBook(Book book, User user) throws SQLException {
         verifyRole(user, Role.ADMIN);
         String sql = "delete from book where bookid = ?";
+        DriverManager.registerDriver(new org.postgresql.Driver());
         try (
                 Connection connection = ConnectionFactory.createConnection();
                 PreparedStatement statement = connection.prepareStatement(sql);
         ){
             statement.setInt(1,book.getBookId());
             statement.executeUpdate();
+            return true;
         } catch (SQLException e) {
             throw new RuntimeException("Livre non supprimé", e);
         }
     }
-    public static void modifyBook(Book originalBook, Book updatedBook, User user) {
+    public static void modifyBook(Book originalBook, Book updatedBook, User user) throws SQLException {
         verifyRole(user, Role.ADMIN);
         String sql = "update book set name = ?, publishingyear = ?, isbn = ?, authorid = ? where bookid = ?";
+        DriverManager.registerDriver(new org.postgresql.Driver());
         try (
                 Connection connection = ConnectionFactory.createConnection();
                 PreparedStatement statement = connection.prepareStatement(sql);
@@ -55,39 +56,66 @@ public class Queries {
             throw new RuntimeException("Livre non modifié", e);
         }
     }
-    public static void displayBooks() {
-        String sql = "select isbn, b.name, a.name from book b join public.author a on a.authorid = b.authorid";
+    public static ArrayList<Book> displayBooks() throws SQLException {
+        String sql = "select bookid, name, authorid, publishingyear, available, isbn from book";
+        DriverManager.registerDriver(new org.postgresql.Driver());
         try (
                 Connection connection = ConnectionFactory.createConnection();
                 Statement statement = connection.createStatement();
                 ResultSet rs = statement.executeQuery(sql)
         ){
+            ArrayList<Book> books = new ArrayList<>();
             while (rs.next()) {
-                System.out.println(rs.getString(1) + " / " + rs.getString(2) + " de " + rs.getString(3));
+
+                while (rs.next()) {
+                    books.add(Book.builder()
+                            .bookId(rs.getInt(1))
+                            .title(rs.getString(2))
+                            .authorId(rs.getInt(3))
+                            .yearOfPublication(rs.getInt(4))
+                            .available(rs.getBoolean(5))
+                            .ISBN(rs.getString(6))
+                            .build());
+                }
             }
+            return books;
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
-    public static void displayAvailableBooks() {
-        String sql = "select isbn, b.name, a.name from book b join public.author a on a.authorid = b.authorid where available = true";
+    public static ArrayList<Book> displayAvailableBooks() throws SQLException {
+        String sql = "select bookid, name, authorid, publishingyear, available, isbn from book where available = true";
+        DriverManager.registerDriver(new org.postgresql.Driver());
         try (
                 Connection connection = ConnectionFactory.createConnection();
                 Statement statement = connection.createStatement();
                 ResultSet rs = statement.executeQuery(sql)
         ){
+            ArrayList<Book> books = new ArrayList<>();
             while (rs.next()) {
-                System.out.println(rs.getString(1) + " / " + rs.getString(2) + " de " + rs.getString(3));
+
+                while (rs.next()) {
+                    books.add(Book.builder()
+                            .bookId(rs.getInt(1))
+                            .title(rs.getString(2))
+                            .authorId(rs.getInt(3))
+                            .yearOfPublication(rs.getInt(4))
+                            .available(rs.getBoolean(5))
+                            .ISBN(rs.getString(6))
+                            .build());
+                }
             }
+            return books;
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
-    public static void borrowBook(Book book, User user) {
+    public static boolean borrowBook(Book book, User user) throws SQLException {
         String sql = "insert into borrow (borrowdate, returndate, userid, bookid) values (?,null,?,?);" +
                 "update book set available = false where bookid = ?";
+        DriverManager.registerDriver(new org.postgresql.Driver());
         try (
                 Connection connection = ConnectionFactory.createConnection();
                 PreparedStatement statement = connection.prepareStatement(sql);
@@ -97,22 +125,32 @@ public class Queries {
             statement.setInt(3, book.getBookId());
             statement.setInt(4, book.getBookId());
             statement.executeUpdate();
+            return true;
         } catch (SQLException e) {
             throw new RuntimeException("Emprunt impossible", e);
         }
     }
-    public static void returnBook(Book book, User user) {
-        String sql = "update borrow set returndate = ? where bookid = ? and userid = ?;" +
+
+    /**
+     * supprime complètement le borrow..
+     * @param book
+     * @param user
+     * @return
+     * @throws SQLException
+     */
+    public static boolean returnBook(Book book, User user) throws SQLException {
+        String sql = "delete from borrow where bookid = ? and userid = ?;" +
                 "update book set available = true where bookid = ?";
+        DriverManager.registerDriver(new org.postgresql.Driver());
         try (
                 Connection connection = ConnectionFactory.createConnection();
                 PreparedStatement statement = connection.prepareStatement(sql);
         ){
-            statement.setDate(1, Date.valueOf(LocalDate.now()));
-            statement.setInt(2, book.getBookId());
-            statement.setInt(3, user.getUserId());
-            statement.setInt(4, book.getBookId());
+            statement.setInt(1, book.getBookId());
+            statement.setInt(2, user.getUserId());
+            statement.setInt(3, book.getBookId());
             statement.executeUpdate();
+            return true;
         } catch (SQLException e) {
             throw new RuntimeException("Emprunt inexistant", e);
         }
@@ -122,8 +160,9 @@ public class Queries {
             throw new SecurityException("Action non autorisée: l'utilisateur doit être " + role);
         }
     }
-    public static Book findByISBN(String ISBN) {
+    public static Book findByISBN(String ISBN) throws SQLException {
         String sql = "select bookid, name, authorid, publishingyear, available from book where isbn like(?)";
+        DriverManager.registerDriver(new org.postgresql.Driver());
         try (
                 Connection connection = ConnectionFactory.createConnection();
                 PreparedStatement statement = connection.prepareStatement(sql);
@@ -144,8 +183,9 @@ public class Queries {
             throw new RuntimeException("Livre introuvable", e);
         }
     }
-    public static String getAuthorNameById(int id) {
+    public static String getAuthorNameById(int id) throws SQLException {
         String sql = "select name from author where authorid = ?";
+        DriverManager.registerDriver(new org.postgresql.Driver());
         try (
                 Connection connection = ConnectionFactory.createConnection();
                 PreparedStatement statement = connection.prepareStatement(sql);
@@ -171,8 +211,9 @@ public class Queries {
      * @return The ID of the author from the database.
      * @throws RuntimeException If an SQL error occurs while executing the query or creating the author.
      */
-    public static int getAuthorIdByName(String name) {
+    public static int getAuthorIdByName(String name) throws SQLException {
         String sql = "select authorid from author where name = ?";
+        DriverManager.registerDriver(new org.postgresql.Driver());
         try (
                 Connection connection = ConnectionFactory.createConnection();
                 PreparedStatement statement = connection.prepareStatement(sql);
@@ -192,8 +233,9 @@ public class Queries {
             throw new RuntimeException("Mauvais auteur", e);
         }
     }
-    public static boolean authorExist(String authorName) {
+    public static boolean authorExist(String authorName) throws SQLException {
         String sql = "SELECT COUNT(*) FROM author WHERE name = ?";
+        DriverManager.registerDriver(new org.postgresql.Driver());
         try (Connection conn = ConnectionFactory.createConnection();
              PreparedStatement statement = conn.prepareStatement(sql)) {
             statement.setString(1, authorName);
@@ -204,8 +246,9 @@ public class Queries {
         }
         return false;
     }
-    public static void createAuthor(String authorName) {
+    public static void createAuthor(String authorName) throws SQLException {
         String sql = "insert into author (name) values (?)";
+        DriverManager.registerDriver(new org.postgresql.Driver());
         try (
                 Connection connection = ConnectionFactory.createConnection();
                 PreparedStatement statement = connection.prepareStatement(sql);
